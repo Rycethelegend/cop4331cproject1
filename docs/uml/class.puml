@@ -1,0 +1,34 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class User {
+    +int ID (PK)
+    +String FirstName
+    +String LastName
+    +String Login
+    +String Password
+}
+
+class Color {
+    +int ID (PK)
+    +String Name
+    +int UserID (FK)
+}
+
+class APIEndpoints {
+    +Login.php
+    +AddColor.php
+    +SearchColors.php
+}
+
+class FrontendUI {
+    +index.html
+    +color.html
+    +code.js
+}
+
+User "1" -- "*" Color : owns >
+FrontendUI ..> APIEndpoints : makes HTTP POST (JSON)
+APIEndpoints --> User : queries / verifies
+APIEndpoints --> Color : reads / writes
+@enduml
