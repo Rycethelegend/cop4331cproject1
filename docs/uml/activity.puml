@@ -1,0 +1,31 @@
+@startuml
+skinparam DefaultTextAlignment center
+
+start
+:User opens index.html / Login Page;
+:User enters Login and Password;
+:Send POST request to LAMPAPI/Login.php;
+
+if (User exists & credentials match?) then (yes)
+    :Retrieve User ID and Name;
+    :Redirect to color.html (Dashboard);
+    
+    repeat :User performs action;
+        if muốn action? then (Search Color)
+            :Enter search term;
+            :Send POST request to LAMPAPI/SearchColors.php;
+            :Display filtered color list;
+        else (Add Color)
+            :Enter color name;
+            :Send POST request to LAMPAPI/AddColor.php;
+            :Save color linked to UserID;
+            :Update color table UI;
+        endif
+    repeat while (User continues session?) is (yes)
+    
+    stop
+else (no)
+    :Display login error message;
+    stop
+endif
+@enduml
