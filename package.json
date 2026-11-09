@@ -1,0 +1,33 @@
+{
+  "name": "cop4331cproject1",
+  "version": "1.0.0",
+  "description": "A color manager webapp created for COP4331C - Processes in Object-Oriented Software Development at UCF, Fall 2026. Hosted using a Droplet on DigitalOcean, on an Ubuntu Linux Server with Apache.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "lint:js": "eslint .",
+    "lint:css": "stylelint '**/*.css'",
+    "lint:html": "htmlhint '**/*.html'",
+    "test": "npm run lint:js && npm run lint:css && npm run lint:html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rycethelegend/cop4331cproject1.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Rycethelegend/cop4331cproject1/issues"
+  },
+  "homepage": "https://github.com/Rycethelegend/cop4331cproject1#readme",
+  "devDependencies": {
+    "eslint": "^8.0.0",
+    "htmlhint": "^1.1.4",
+    "stylelint": "^15.0.0",
+    "stylelint-config-standard": "^31.0.0"
+  }
+}
