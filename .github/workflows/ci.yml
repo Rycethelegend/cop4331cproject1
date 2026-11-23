@@ -1,27 +1,67 @@
-name: CI Linting Workflow
+name: CI
 
 on:
   push:
-    branches: [ "*" ]
+    branches: ["**"]
   pull_request:
-    branches: [ "*" ]
+    branches: ["**"]
 
 jobs:
-  lint:
+  lint-and-test:
     runs-on: ubuntu-latest
 
+    env:
+      DB_HOST: 127.0.0.1
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: rootpassword
+          MYSQL_DATABASE: COP4331
+          MYSQL_USER: TheBeast
+          MYSQL_PASSWORD: WeLoveCOP4331
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost -u root -prootpassword"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
     steps:
-      - name: Checkout Code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mysqli, pdo_mysql
+
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
 
-      - name: Install Dependencies
+      - name: Install Node dependencies
         run: npm ci
 
-      - name: Run Linters
+      - name: Initialize MySQL schema
+        run: |
+          sudo apt-get update -y && sudo apt-get install -y default-mysql-client
+          mysql -h 127.0.0.1 -P 3306 -u TheBeast -pWeLoveCOP4331 COP4331 << 'EOF'
+          CREATE TABLE IF NOT EXISTS Colors (
+            ID INT NOT NULL AUTO_INCREMENT,
+            UserId INT NOT NULL,
+            Name VARCHAR(50) NOT NULL,
+            PRIMARY KEY (ID)
+          );
+          EOF
+
+      - name: Run linters
         run: npm test
-        # Alternatively, run your individual linter commands here if not configured in package.json scripts
+
+      - name: Run Jest unit and integration tests
+        run: npx jest
